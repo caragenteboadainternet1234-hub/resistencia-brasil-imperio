@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <!-- VIEWPORT SEGURO: sem maximum-scale / user-scalable=no. Bloquear o zoom
+         reprova no WCAG 1.4.4 (Resize Text) e prejudica pessoas com baixa visão. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Resistência — Memória, Cultura e Liberdade | Brasil Império (1822–1889)</title>
+    <meta name="description" content="Exposição digital sobre a resistência negra no Brasil Império (1822-1889): capoeira, religiosidade, culinária, quilombos e poesia social. Memória, Cultura e Liberdade.">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f4efe6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)">
+
+    <!-- TODO (produção): troque https://www.exemplo.com.br/resistencia/ pela URL real
+         (canonical, og:url, og:image, JSON-LD) e forneça /img/og-resistencia.jpg (1200×630). -->
+    <link rel="canonical" href="https://www.exemplo.com.br/resistencia/">
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn…) -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Resistência — Memória, Cultura e Liberdade">
+    <meta property="og:title" content="Resistência — Memória, Cultura e Liberdade">
+    <meta property="og:description" content="Memória, cultura e luta pela liberdade no Brasil Império (1822–1889): uma exposição digital sobre a resistência da população negra.">
+    <meta property="og:url" content="https://www.exemplo.com.br/resistencia/">
+    <meta property="og:image" content="https://www.exemplo.com.br/resistencia/img/og-resistencia.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Título &quot;Resistência&quot; sobre fundo escuro, com o período 1822–1889.">
+
+    <!-- Twitter / X Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Resistência — Memória, Cultura e Liberdade">
+    <meta name="twitter:description" content="Memória, cultura e luta pela liberdade no Brasil Império (1822–1889).">
+    <meta name="twitter:image" content="https://www.exemplo.com.br/resistencia/img/og-resistencia.jpg">
+    <meta name="twitter:image:alt" content="Título &quot;Resistência&quot; sobre fundo escuro, com o período 1822–1889.">
+
+    <!-- Favicon em SVG inline: zero requisições extras e sem 404 no /favicon.ico. -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23171717'/%3E%3Ctext x='16' y='23' font-size='20' font-family='Georgia,serif' font-weight='700' text-anchor='middle' fill='%23B89A61'%3ER%3C/text%3E%3C/svg%3E">
+
+    <!-- Dados estruturados (JSON-LD): ajuda buscadores a classificar o recurso educacional. -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        "name": "Resistência — Memória, Cultura e Liberdade",
+        "description": "Exposição digital sobre a resistência negra no Brasil Império (1822–1889).",
+        "inLanguage": "pt-BR",
+        "url": "https://www.exemplo.com.br/resistencia/",
+        "learningResourceType": "Exposição digital",
+        "about": { "@type": "Thing", "name": "Resistência negra no Brasil Império" }
+    }
+    </script>
+
+    <!-- PERFORMANCE: fontes.
+         1) preconnect antecipa DNS + TLS dos dois domínios do Google Fonts.
+         2) O CSS das fontes é pré-carregado com rel="preload" as="style" e
+            promovido a stylesheet no onload: o carregamento NÃO bloqueia a
+            renderização (o texto aparece na fonte de fallback e troca por
+            font-display: swap, sem texto invisível).
+         3) <noscript> garante as fontes para quem desativa JS.
+         Não é possível pré-carregar o .woff2 diretamente porque as URLs do
+         Google Fonts são versionadas. Ao AUTO-HOSPEDAR as fontes (recomendado
+         em produção, e melhor para LGPD), troque por, por exemplo:
+         <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+    </noscript>
+
+    <!-- CSS principal: propositalmente bloqueante (evita flash de conteúdo sem estilo). -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Detecção de JS: script mínimo e síncrono, só para marcar o <html>.
+         O CSS usa `.js` para esconder elementos de animação; sem JS (ou se
+         script.js falhar) todo o conteúdo continua visível. -->
+    <script>document.documentElement.classList.add('js');</script>
+
+    <!-- `defer`: baixa em paralelo ao parsing e executa só depois do DOM pronto,
+         sem bloquear a renderização. -->
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <!-- SKIP LINK (WCAG 2.4.1): primeiro elemento focável da página. Fica fora
+         da tela e aparece ao receber foco via Tab. -->
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo principal</a>
+
+    <!-- Barra de progresso: puramente visual, por isso aria-hidden.
+         O equivalente para leitores de tela é a região aria-live abaixo. -->
+    <div class="progress" aria-hidden="true">
+        <div class="progress__bar" data-progress></div>
+    </div>
+
+    <!-- Região aria-live (polite): anuncia marcos de leitura (25/50/75/100%),
+         dando às pessoas que usam leitor de tela a mesma informação da barra. -->
+    <div class="u-visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-live-region></div>
+
+    <header class="site-header" data-header>
+        <div class="container site-header__inner">
+            <!-- aria-label contém o texto visível (WCAG 2.5.3 — Label in Name). -->
+            <a href="#hero" class="site-header__logo" data-focus-top aria-label="Resistência — página inicial">Resistência</a>
+
+            <button type="button" class="nav-toggle" data-nav-toggle aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu">
+                <span class="nav-toggle__box" aria-hidden="true">
+                    <span class="nav-toggle__bar"></span>
+                    <span class="nav-toggle__bar"></span>
+                    <span class="nav-toggle__bar"></span>
+                </span>
+            </button>
+
+            <nav class="nav" id="main-nav" data-nav aria-label="Navegação principal">
+                <!-- role="list": o Safari/VoiceOver remove a semântica de lista quando list-style é none. -->
+                <ul class="nav__list" role="list">
+                    <li><a class="nav__link" href="#introducao">Contexto</a></li>
+                    <li><a class="nav__link" href="#capoeira">Capoeira</a></li>
+                    <li><a class="nav__link" href="#religiosidade">Religiosidade</a></li>
+                    <li><a class="nav__link" href="#culinaria">Culinária</a></li>
+                    <li><a class="nav__link" href="#quilombos">Quilombos</a></li>
+                    <li><a class="nav__link" href="#poesia">Poesia Social</a></li>
+                    <li><a class="nav__link" href="#sintese">Síntese</a></li>
+                    <li><a class="nav__link" href="#fontes">Fontes</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- tabindex="-1": permite que o skip link transfira o foco para <main>
+         (sem entrar na ordem natural de tabulação). -->
+    <main id="conteudo" tabindex="-1">
+
+        <!-- Hero -->
+        <section id="hero" class="hero" aria-labelledby="hero-titulo">
+            <div class="container hero__content">
+                <span class="hero__period">1822 &mdash; 1889</span>
+                <h1 class="hero__title" id="hero-titulo">Resistência</h1>
+                <!-- Era um <h2>: é um subtítulo da página, não o título de uma seção.
+                     Usar <p> mantém a hierarquia de headings limpa (h1 → h2 de seções). -->
+                <p class="hero__subtitle">Memória, cultura e luta pela liberdade no Brasil Império.</p>
+                <p class="hero__text">
+                    Durante a escravidão, a população negra desenvolveu diferentes formas de resistência,
+                    preservou tradições e construiu caminhos de luta por liberdade. Conhecer essas histórias
+                    é compreender uma parte fundamental da formação do Brasil.
+                </p>
+                <div class="hero__actions">
+                    <a href="#introducao" class="btn btn--primary">Explorar a exposição</a>
+                    <a href="#linha-do-tempo" class="btn btn--secondary">Conhecer a linha do tempo</a>
+                </div>
+            </div>
+            <a href="#introducao" class="hero__scroll" aria-label="Rolar para baixo">
+                <span aria-hidden="true">↓</span>
+            </a>
+        </section>
+
+        <!-- Introdução -->
+        <section id="introducao" class="section section--ink" aria-labelledby="introducao-titulo">
+            <div class="container">
+                <div class="editorial">
+                    <div class="editorial__text reveal">
+                        <h2 class="section__title" id="introducao-titulo">A Contradição de uma Nação</h2>
+                        <p>
+                            A Independência do Brasil, declarada em 1822, trouxe autonomia política em relação a Portugal, mas manteve intacta a estrutura mais cruel do país: a escravidão. O Império foi erguido e sustentado pelo trabalho de pessoas africanas e afro-brasileiras.
+                        </p>
+                        <p>
+                            No entanto, a história desse período não é apenas uma narrativa de opressão. A população negra assumiu um <strong>protagonismo histórico inegável</strong>. A resistência não se limitou apenas aos confrontos diretos ou revoltas armadas; ela se manifestou profundamente na preservação da cultura, na manutenção de vínculos religiosos, na criação de redes comunitárias de apoio, na busca incessante por autonomia e na produção intelectual.
+                        </p>
+                    </div>
+                    <!-- <aside> com nome acessível = landmark "complementary" bem rotulado. -->
+                    <aside class="editorial__aside reveal reveal--delay-1" aria-labelledby="marcos-titulo">
+                        <h3 class="editorial__aside-title" id="marcos-titulo">Marcos de um século em disputa</h3>
+                        <ul class="key-dates" role="list">
+                            <li class="key-dates__item"><strong>1822:</strong> Independência sem abolição.</li>
+                            <li class="key-dates__item"><strong>1850:</strong> Fim do tráfico transatlântico.</li>
+                            <li class="key-dates__item"><strong>1871:</strong> Lei do Ventre Livre.</li>
+                            <li class="key-dates__item"><strong>1888:</strong> Lei Áurea.</li>
+                        </ul>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- Linha do tempo -->
+        <section id="linha-do-tempo" class="section section--paper" aria-labelledby="linha-do-tempo-titulo">
+            <div class="container">
+                <h2 class="section__title u-text-center reveal" id="linha-do-tempo-titulo">Cronologia do Brasil Império</h2>
+                <!-- SEMÂNTICA: uma sequência cronológica é uma lista ORDENADA.
+                     Datas em <time datetime>; o título do evento é o heading (h3).
+                     Antes: date=h3 e título=h4, o que gerava uma hierarquia confusa. -->
+                <ol class="timeline" role="list">
+                    <li class="timeline__item reveal">
+                        <span class="timeline__dot" aria-hidden="true"></span>
+                        <div class="timeline__card">
+                            <p class="timeline__date"><time datetime="1822">1822</time></p>
+                            <h3 class="timeline__title">Independência do Brasil</h3>
+                            <p>O Brasil rompe politicamente com Portugal, consolidando-se como um Império. Contudo, as elites agrárias garantem a manutenção da escravidão como base da economia nacional.</p>
+                        </div>
+                    </li>
+                    <li class="timeline__item reveal">
+                        <span class="timeline__dot" aria-hidden="true"></span>
+                        <div class="timeline__card">
+                            <p class="timeline__date"><time datetime="1831">1831</time></p>
+                            <h3 class="timeline__title">Lei Feijó (Proibição do Tráfico)</h3>
+                            <p>Lei que declarava livres os africanos desembarcados no Brasil. Foi amplamente ignorada pelas autoridades e proprietários de terras, gerando a expressão "lei para inglês ver".</p>
+                        </div>
+                    </li>
+                    <li class="timeline__item reveal">
+                        <span class="timeline__dot" aria-hidden="true"></span>
+                        <div class="timeline__card">
+                            <p class="timeline__date"><time datetime="1850">1850</time></p>
+                            <h3 class="timeline__title">Lei Eusébio de Queirós</h3>
+                            <p>Proibição definitiva e repressão efetiva ao tráfico negreiro transatlântico. Isso impulsionou o tráfico interno, transferindo escravizados do Nordeste para as fazendas de café do Sudeste.</p>
+                        </div>
+                    </li>
+                    <li class="timeline__item reveal">
+                        <span class="timeline__dot" aria-hidden="true"></span>
+                        <div class="timeline__card">
+                            <p class="timeline__date"><time datetime="1871">1871</time></p>
+                            <h3 class="timeline__title">Lei do Ventre Livre</h3>
+                            <p>Declarava livres os filhos de mulheres escravizadas nascidos a partir daquela data, embora as crianças ficassem sob a tutela dos senhores até os 8 ou 21 anos.</p>
+                        </div>
+                    </li>
+                    <li class="timeline__item reveal">
+                        <span class="timeline__dot" aria-hidden="true"></span>
+                        <div class="timeline__card">
+                            <p class="timeline__date"><time datetime="1885">1885</time></p>
+                            <h3 class="timeline__title">Lei dos Sexagenários</h3>
+                            <p>Libertava escravizados com mais de 60 anos (idade que poucos alcançavam devido às condições extremas). Na prática, desobrigava os senhores de sustentar idosos.</p>
+                        </div>
+                    </li>
+                    <li class="timeline__item reveal">
+                        <span class="timeline__dot" aria-hidden="true"></span>
+                        <div class="timeline__card">
+                            <p class="timeline__date"><time datetime="1888">1888</time></p>
+                            <h3 class="timeline__title">Lei Áurea</h3>
+                            <p>Abolição formal e legal da escravidão no Brasil, resultado de intensa pressão de movimentos abolicionistas, fugas em massa e revoltas da própria população negra.</p>
+                        </div>
+                    </li>
+                    <li class="timeline__item reveal">
+                        <span class="timeline__dot" aria-hidden="true"></span>
+                        <div class="timeline__card">
+                            <p class="timeline__date"><time datetime="1889">1889</time></p>
+                            <h3 class="timeline__title">Proclamação da República</h3>
+                            <p>Fim do Império. O novo regime, no entanto, não implementou políticas de inclusão, educação ou distribuição de terras para a população negra recém-liberta.</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Capoeira -->
+        <section id="capoeira" class="section section--ink" aria-labelledby="capoeira-titulo">
+            <div class="container">
+                <div class="split">
+                    <!-- Antes: <figcaption> solto numa <div> (HTML inválido). Agora <figure> completo.
+                         IMAGENS: os 4 placeholders são SVGs inline (gradientes) para o projeto rodar sem
+                         arquivos externos. width/height reservam o espaço (CLS ≈ 0);
+                         loading="lazy" + decoding="async" adiam o que está abaixo da dobra.
+                         Em produção, troque o src por (exemplo):
+                         src="img/capoeira-600.webp" srcset="img/capoeira-600.webp 600w, img/capoeira-1200.webp 1200w"
+                         sizes="(min-width: 64em) 36rem, 100vw"
+                         NUNCA use loading="lazy" em imagem do LCP/acima da dobra. -->
+                    <figure class="split__media media reveal">
+                        <img class="media__img"
+                             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 450'%3E%3ClinearGradient id='g' x2='1' y2='1'%3E%3Cstop stop-color='%23111'/%3E%3Cstop offset='1' stop-color='%233a2a22'/%3E%3C/linearGradient%3E%3Crect width='600' height='450' fill='url(%23g)'/%3E%3C/svg%3E"
+                             width="600" height="450" loading="lazy" decoding="async"
+                             alt="Ilustração histórica de roda de capoeira">
+                        <figcaption class="media__caption">Roda de Capoeira. A arte de lutar disfarçada de dança.</figcaption>
+                    </figure>
+                    <div class="split__body reveal reveal--delay-1">
+                        <!-- <hgroup> (HTML5.2+): agrupa título + subtítulo sem criar um heading extra no outline. -->
+                        <hgroup>
+                            <h2 class="section__title" id="capoeira-titulo">Corpo, Cultura e Resistência</h2>
+                            <p class="section__subtitle">A Capoeira</p>
+                        </hgroup>
+                        <p>Originada a partir de tradições e rituais trazidos da África (especialmente de matriz banto), a capoeira desenvolveu-se no Brasil como uma complexa mistura de luta, dança, música e sociabilidade.</p>
+                        <p>Para a população negra — escravizada, liberta ou livre —, a prática corporal era um treinamento de autodefesa, uma forma de proteção mútua nas ruas das cidades imperiais e um espaço vital de afirmação cultural.</p>
+                        <!-- role="note": conteúdo acessório, sem criar mais um landmark (<aside>) na página. -->
+                        <div class="callout" role="note">
+                            <h3 class="callout__title">A resistência também estava nos espaços de convivência</h3>
+                            <p>No Brasil Império, as "maltas" de capoeiristas dominavam espaços urbanos. As autoridades policiais reprimiam duramente a prática, associando-a à desordem.</p>
+                        </div>
+                        <p>É importante ressaltar que a capoeira foi violentamente perseguida durante o Império, mas sua criminalização oficial ocorreu apenas na República, com o Código Penal de 1890.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Religiosidade -->
+        <section id="religiosidade" class="section section--paper" aria-labelledby="religiosidade-titulo">
+            <div class="container">
+                <!-- split--reverse: mídia à direita no desktop; empilha com a mídia no topo no mobile. -->
+                <div class="split split--reverse">
+                    <figure class="split__media media reveal">
+                        <img class="media__img"
+                             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 450'%3E%3ClinearGradient id='g' x2='1' y2='1'%3E%3Cstop stop-color='%23e0d5c1'/%3E%3Cstop offset='1' stop-color='%23b89a61'/%3E%3C/linearGradient%3E%3Crect width='600' height='450' fill='url(%23g)'/%3E%3C/svg%3E"
+                             width="600" height="450" loading="lazy" decoding="async"
+                             alt="Representação do sincretismo religioso e religiões afro-brasileiras">
+                    </figure>
+                    <div class="split__body reveal reveal--delay-1">
+                        <hgroup>
+                            <h2 class="section__title" id="religiosidade-titulo">Preservação do Sagrado</h2>
+                            <p class="section__subtitle">Religiosidade e Sincretismo</p>
+                        </hgroup>
+                        <p>Em uma sociedade onde o catolicismo era a religião oficial do Estado (Constituição de 1824) e outras práticas eram reprimidas, a manutenção da fé africana exigiu inteligência e resiliência.</p>
+                        <p>O <strong>sincretismo religioso</strong> — a associação de Orixás, Voduns e Inquices a santos católicos — não foi uma simples "mistura", mas uma sofisticada estratégia de sobrevivência. Por trás dos altares católicos, cultuava-se a ancestralidade africana.</p>
+                        <p>As religiões afro-brasileiras formaram comunidades de acolhimento (terreiros, irmandades católicas negras), onde a língua sagrada, a hierarquia, a música e o sentido de pertencimento garantiram que a identidade de diversos povos não fosse apagada.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Culinária -->
+        <section id="culinaria" class="section section--ink" aria-labelledby="culinaria-titulo">
+            <div class="container">
+                <hgroup class="u-text-center reveal">
+                    <h2 class="section__title" id="culinaria-titulo">A Memória no Prato</h2>
+                    <p class="section__subtitle">Culinária Afro-brasileira</p>
+                </hgroup>
+                <p class="section__intro u-text-center reveal">Ingredientes como o dendê, o quiabo e o feijão-fradinho, somados a saberes milenares, moldaram a identidade alimentar do Brasil.</p>
+
+                <!-- Grade de cards = lista (<ul>/<li>): leitores de tela anunciam "lista com 3 itens". -->
+                <ul class="card-grid card-grid--gallery" role="list">
+                    <li class="card card--ink reveal">
+                        <img class="media__img"
+                             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop stop-color='%23A84E36'/%3E%3Cstop offset='1' stop-color='%235c2c1e'/%3E%3C/linearGradient%3E%3Crect width='600' height='300' fill='url(%23g)'/%3E%3C/svg%3E"
+                             width="600" height="300" loading="lazy" decoding="async"
+                             alt="Acarajé frito no azeite de dendê">
+                        <div class="card__body">
+                            <h3 class="card__title">Acarajé e a Ancestralidade</h3>
+                            <p class="card__text">Alimento sagrado nos terreiros (oferenda a Iansã), o acarajé tornou-se símbolo da cultura baiana. Seu preparo guarda segredos transmitidos por gerações de mulheres negras.</p>
+                        </div>
+                    </li>
+                    <li class="card card--ink reveal reveal--delay-1">
+                        <img class="media__img"
+                             src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300'%3E%3ClinearGradient id='g' x1='0' y1='1' x2='1' y2='0'%3E%3Cstop stop-color='%2377716b'/%3E%3Cstop offset='1' stop-color='%23333'/%3E%3C/linearGradient%3E%3Crect width='600' height='300' fill='url(%23g)'/%3E%3C/svg%3E"
+                             width="600" height="300" loading="lazy" decoding="async"
+                             alt="Mulheres negras vendendo alimentos nas ruas no século XIX">
+                        <div class="card__body">
+                            <h3 class="card__title">As Quitandeiras</h3>
+                            <p class="card__text">Nas cidades do Império, mulheres negras (escravizadas e libertas) dominavam o comércio de rua de alimentos. O dinheiro das vendas, muitas vezes, financiava a compra de alforrias e o sustento familiar.</p>
+                        </div>
+                    </li>
+                    <li class="card card--ink reveal reveal--delay-2">
+                        <div class="card__body">
+                            <h3 class="card__title">Autonomia e Resistência</h3>
+                            <p class="card__text">Diferenciar as condições históricas é crucial: enquanto algumas trabalhavam sob ordens senhoriais ("escravas de ganho"), outras eram libertas lutando por autonomia econômica, fazendo da comida um vetor de liberdade.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Quilombos e Cotidiano -->
+        <section id="quilombos" class="section section--paper" aria-labelledby="quilombos-titulo">
+            <div class="container">
+                <hgroup class="reveal">
+                    <h2 class="section__title" id="quilombos-titulo">Além das Fugas</h2>
+                    <p class="section__subtitle">Quilombos e Resistência Cotidiana</p>
+                </hgroup>
+
+                <div class="columns reveal">
+                    <p>Os <strong>quilombos</strong> representavam a ruptura física com o sistema escravista. Eram comunidades ocultas onde recriavam-se modos de vida livres. O Quilombo dos Palmares, liderado por Zumbi e Dandara, ocorreu no período colonial, mas sua memória inspirou a formação de inúmeros quilombos durante todo o Império, como o Quilombo do Jabaquara, em São Paulo, e o Quilombo de Vassouras, no Rio de Janeiro.</p>
+                    <p>Contudo, a resistência também ocorria dentro das fazendas e das cidades. A <strong>resistência cotidiana</strong> envolvia quebrar ferramentas, trabalhar em ritmo mais lento, realizar abortos para poupar filhos da escravidão, formar laços de parentesco e economizar secretamente para negociar cartas de alforria. A população negra jamais aguardou passivamente a libertação.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Poesia Social -->
+        <section id="poesia" class="section section--ink" aria-labelledby="poesia-titulo">
+            <div class="container">
+                <div class="split">
+                    <div class="split__body reveal">
+                        <hgroup>
+                            <h2 class="section__title" id="poesia-titulo">A Palavra como Denúncia</h2>
+                            <p class="section__subtitle">Poesia Social e Abolicionismo</p>
+                        </hgroup>
+                        <p>No século XIX, a terceira geração do Romantismo brasileiro (Geração Condoreira) fez da literatura uma arma política. A <strong>poesia social</strong> denunciou as atrocidades do tráfico e a desumanização promovida pela escravidão.</p>
+                        <p><strong>Castro Alves</strong> (1847–1871), conhecido como o "Poeta dos Escravos", chocou a sociedade letrada com obras como <em>O Navio Negreiro</em>. Ele ajudou a moldar a opinião pública contra a escravidão, usando recursos literários para gerar empatia e indignação.</p>
+                        <p>A literatura aliou-se ao ativismo de intelectuais negros como Luiz Gama e José do Patrocínio, mostrando que a resistência operava tanto nas matas (quilombos) quanto nas páginas dos jornais e nos tribunais.</p>
+                    </div>
+                    <!-- Citação semântica: <figure> + <blockquote> + <figcaption> com <cite> da obra. -->
+                    <figure class="split__media poem reveal reveal--delay-1">
+                        <blockquote class="poem__verse">
+                            <p>
+                                "Senhor Deus dos desgraçados!<br>
+                                Dizei-me vós, Senhor Deus!<br>
+                                Se é loucura... se é verdade<br>
+                                Tanto horror perante os céus?!"
+                            </p>
+                        </blockquote>
+                        <figcaption class="poem__cite">— Castro Alves, <cite>O Navio Negreiro</cite> (1868)</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <!-- Síntese -->
+        <section id="sintese" class="section section--paper" aria-labelledby="sintese-titulo">
+            <div class="container">
+                <h2 class="section__title u-text-center reveal" id="sintese-titulo">Como tudo se conecta</h2>
+                <p class="section__intro u-text-center reveal">A luta por liberdade no Brasil Império não teve apenas um formato. Ela foi um ecossistema de sobrevivência e afirmação.</p>
+
+                <!-- Os títulos dos cards eram <h4> logo abaixo de um <h2> (salto de nível); agora <h3>. -->
+                <ul class="card-grid card-grid--synthesis" role="list">
+                    <li class="card card--paper reveal">
+                        <div class="card__body">
+                            <h3 class="card__title">Capoeira</h3>
+                            <p class="card__text">Defesa do corpo e sociabilidade. Enfrentava o controle policial e afirmava o domínio dos espaços urbanos.</p>
+                        </div>
+                    </li>
+                    <li class="card card--paper reveal reveal--delay-1">
+                        <div class="card__body">
+                            <h3 class="card__title">Religiosidade</h3>
+                            <p class="card__text">Defesa do espírito. Manteve laços comunitários e filosofias ancestrais vivas sob a imposição do catolicismo imperial.</p>
+                        </div>
+                    </li>
+                    <li class="card card--paper reveal reveal--delay-2">
+                        <div class="card__body">
+                            <h3 class="card__title">Culinária</h3>
+                            <p class="card__text">Defesa da memória e subsistência. Gerou autonomia financeira para compra de alforrias e preservou rituais.</p>
+                        </div>
+                    </li>
+                    <li class="card card--paper reveal">
+                        <div class="card__body">
+                            <h3 class="card__title">Quilombos</h3>
+                            <p class="card__text">Ruptura territorial. Comunidades de autonomia política e produtiva que desestabilizavam a ordem escravocrata.</p>
+                        </div>
+                    </li>
+                    <li class="card card--paper reveal reveal--delay-1">
+                        <div class="card__body">
+                            <h3 class="card__title">Cotidiano</h3>
+                            <p class="card__text">Resistência silenciosa. Sabotagens, negociações e redes de afeto dentro do coração do sistema produtivo.</p>
+                        </div>
+                    </li>
+                    <li class="card card--paper reveal reveal--delay-2">
+                        <div class="card__body">
+                            <h3 class="card__title">Poesia Social</h3>
+                            <p class="card__text">Trincheira intelectual. Mobilização da opinião pública e denúncia estética que expôs as contradições do Império.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="conclusion reveal">
+                    <p>A Lei Áurea de 1888 encerrou a escravidão legalmente, mas a ausência de políticas de reparação perpetuou as desigualdades raciais e sociais na República. Conhecer as estratégias históricas de resistência é vital para combater o racismo estrutural que ainda reverbera no Brasil contemporâneo.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Fontes e Referências -->
+        <section id="fontes" class="section section--ink references" aria-labelledby="fontes-titulo">
+            <div class="container">
+                <h2 class="section__title reveal" id="fontes-titulo">Fontes e Referências</h2>
+                <!-- Links com target="_blank": rel="noopener noreferrer" evita acesso a window.opener,
+                     e o texto oculto avisa leitores de tela que abre em nova aba (WCAG 3.2.5 / G201). -->
+                <ul class="references__list reveal" role="list">
+                    <li class="references__item"><a class="references__link" href="https://www.gov.br/arquivonacional" target="_blank" rel="noopener noreferrer">Arquivo Nacional<span class="u-visually-hidden"> (abre em nova aba)</span></a> – Documentos e dossiês sobre a escravidão e resistência no Brasil.</li>
+                    <li class="references__item"><a class="references__link" href="https://www.palmares.gov.br" target="_blank" rel="noopener noreferrer">Fundação Cultural Palmares<span class="u-visually-hidden"> (abre em nova aba)</span></a> – Acervo sobre cultura afro-brasileira e memória de Palmares.</li>
+                    <li class="references__item"><a class="references__link" href="http://portal.iphan.gov.br" target="_blank" rel="noopener noreferrer">IPHAN<span class="u-visually-hidden"> (abre em nova aba)</span></a> – Dossiês de Registro do Patrimônio Imaterial (Roda de Capoeira e Ofício das Baianas de Acarajé).</li>
+                    <li class="references__item"><a class="references__link" href="http://bndigital.bn.gov.br" target="_blank" rel="noopener noreferrer">Biblioteca Nacional (BNDigital)<span class="u-visually-hidden"> (abre em nova aba)</span></a> – Acervo literário e histórico de Castro Alves e jornais abolicionistas.</li>
+                    <li class="references__item"><a class="references__link" href="http://www.museuafrobrasil.org.br" target="_blank" rel="noopener noreferrer">Museu Afro Brasil<span class="u-visually-hidden"> (abre em nova aba)</span></a> – Exposições digitais e pesquisas sobre a identidade afro-brasileira.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>Trabalho Escolar — 4º Eixo: Resistência no Brasil Império</p>
+            <p><small>Desenvolvido para fins educacionais. Imagens históricas simuladas por estilização em CSS para segurança técnica da demonstração.</small></p>
+        </div>
+    </footer>
+
+    <button type="button" class="back-to-top" data-back-to-top aria-label="Voltar ao topo">
+        <span aria-hidden="true">↑</span>
+    </button>
+</body>
+</html>

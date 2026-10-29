@@ -1,0 +1,1177 @@
+/* ==========================================================================
+   RESISTÊNCIA — Memória, Cultura e Liberdade
+   style.css · Design System + componentes BEM
+
+   ORDEM DO ARQUIVO (do menos para o mais específico — evita guerras de
+   especificidade e mantém a cascata previsível):
+     1. Design Tokens (primitivos → semânticos → tipografia/espaço/motion)
+     2. Dark Mode (apenas REMAPEIA tokens semânticos; nenhum componente muda)
+     3. Reset & Base
+     4. Layout (container, section, split, editorial, grids)
+     5. Componentes (BEM): header/nav, hero, btn, media, callout, timeline,
+        poem, card, columns, references, footer, back-to-top
+     6. Utilitários (prefixo u-)
+     7. Fallbacks (sem JS / sem backdrop-filter)
+     8. Motion (somente transform + opacity) e prefers-reduced-motion
+
+   CONVENÇÃO BEM:  .bloco__elemento--modificador
+   Estados controlados por JS usam modificadores BEM (ex.: .nav--open) e o
+   JS seleciona por [data-*], nunca por classe: estilo e comportamento ficam
+   desacoplados (renomear uma classe não quebra o script).
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. DESIGN TOKENS
+   ========================================================================== */
+:root {
+    /* Informa ao navegador que a página suporta os dois esquemas
+       (scrollbars, campos de formulário e canvas seguem o tema). */
+    color-scheme: light dark;
+
+    /* ---- 1.1 Cores primitivas (valores brutos; nunca usadas direto em componentes) ---- */
+    --color-charcoal-950: #0a0a0a;
+    --color-charcoal-900: #171717;
+    --color-charcoal-800: #222222;
+    --color-cream-100: #f4efe6;
+    --color-cream-200: #e3dccf;
+    --color-terracotta-300: #d9806a;   /* terracota clara: texto sobre fundos escuros */
+    --color-terracotta-600: #a84e36;
+    --color-terracotta-700: #8b3e29;
+    --color-gold-500: #b89a61;
+    --color-stone-300: #a8a199;        /* cinza claro: texto secundário sobre fundo escuro */
+    --color-stone-500: #77716b;        /* cinza original — só decorativo (contraste < 4.5:1) */
+    --color-stone-700: #5c5650;        /* cinza escuro: texto secundário sobre fundo claro */
+    --color-white: #ffffff;
+
+    /* ---- 1.2 Cores semânticas (é AQUI que o dark mode atua) ----
+       DECISÃO DE ENGENHARIA (WCAG 1.4.3): o cinza original #77716B tinha
+       contraste de ~3.7:1 sobre o carvão e ~4.2:1 sobre o creme — abaixo do
+       mínimo AA (4.5:1) para texto normal. Foi substituído por tokens de
+       papel semântico (muted) com ~6–7:1, mantendo a identidade visual. */
+    --surface-ink: var(--color-charcoal-900);          /* seções escuras */
+    --surface-ink-raised: var(--color-charcoal-800);   /* cards/callouts sobre escuro */
+    --surface-paper: var(--color-cream-100);           /* seções claras ("papel") */
+    --surface-paper-raised: var(--color-white);        /* cards sobre papel */
+    --surface-footer: var(--color-charcoal-950);
+    --surface-header: rgba(23, 23, 23, 0.92);
+    --surface-header-solid: rgba(23, 23, 23, 0.98);
+
+    --text-on-ink: var(--color-cream-100);
+    --text-on-ink-soft: var(--color-cream-200);
+    --text-on-ink-muted: var(--color-stone-300);       /* ≈ 7:1 sobre #171717 */
+    --text-on-paper: var(--color-charcoal-900);
+    --text-on-paper-muted: var(--color-stone-700);     /* ≈ 6.3:1 sobre #F4EFE6 */
+
+    --accent-on-ink: var(--color-gold-500);            /* ≈ 6.7:1 sobre #171717 */
+    --accent-on-paper: var(--color-terracotta-600);    /* ≈ 4.8:1 sobre #F4EFE6 */
+    --accent-decor: var(--color-terracotta-600);       /* bordas/pontos (não-texto) */
+    --accent-action: var(--color-terracotta-600);
+    --accent-action-hover: var(--color-terracotta-700);
+
+    --border-on-ink: rgba(255, 255, 255, 0.1);
+    --border-on-paper: rgba(0, 0, 0, 0.05);
+
+    --focus-on-ink: var(--color-gold-500);
+    --focus-on-paper: var(--color-terracotta-700);
+    --focus-ring: var(--focus-on-paper);               /* sobrescrito por seção */
+
+    /* ---- 1.3 Tipografia ----
+       Pilhas com fallback de sistema com métricas próximas, para reduzir
+       o salto de layout (CLS) enquanto a webfont carrega (font-display: swap). */
+    --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+    /* Escala fluida: clamp(mínimo, preferido-linear, máximo).
+       Substitui saltos por media query por interpolação contínua. */
+    --fs-xs: clamp(0.8125rem, 0.79rem + 0.1vw, 0.85rem);
+    --fs-sm: clamp(0.9rem, 0.88rem + 0.1vw, 0.95rem);
+    --fs-base: 1rem;
+    --fs-md: clamp(1.05rem, 1rem + 0.25vw, 1.1rem);
+    --fs-lg: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+    --fs-xl: clamp(1.2rem, 1rem + 1vw, 2rem);
+    --fs-2xl: clamp(2rem, 1.5rem + 2vw, 3rem);
+    /* 11vw: com "RESISTÊNCIA" (1 palavra, não quebra) o título precisa
+       caber em 320px sem estourar; o teto de 5.5rem cabe no container de 50rem. */
+    --fs-hero: clamp(2rem, 11vw, 5.5rem);
+
+    --lh-tight: 1.2;
+    --lh-base: 1.6;
+    --lh-loose: 1.8;
+
+    --ls-wide: 0.08em;
+    --ls-wider: 0.19em;
+
+    /* ---- 1.4 Espaçamento (fluido) ---- */
+    --space-3xs: 0.25rem;
+    --space-2xs: 0.5rem;
+    --space-xs: 0.75rem;
+    --space-sm: 1rem;
+    --space-md: clamp(1.25rem, 1rem + 1vw, 2rem);
+    --space-lg: clamp(2rem, 1rem + 4vw, 4rem);
+    --space-xl: clamp(3.5rem, 2rem + 6vw, 6rem);
+    --gutter: clamp(1rem, 4vw, 2rem);
+
+    /* ---- 1.5 Layout ---- */
+    --container-max: 75rem;
+    --measure: 68ch;            /* largura máx. de leitura (< 80 caracteres) */
+    --measure-narrow: 37.5rem;
+    --header-h: 4rem;
+
+    /* ---- 1.6 Raios, sombras, z-index ---- */
+    --radius-sm: 4px;
+    --radius-full: 50%;
+
+    --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --shadow-header: 0 2px 12px rgba(0, 0, 0, 0.35);
+    --shadow-fab: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+    /* Escala de camadas explícita: nunca "z-index: 99999" em componente. */
+    --z-base: 0;
+    --z-raised: 1;
+    --z-fab: 900;
+    --z-header: 1000;
+    --z-progress: 1100;
+    --z-skip: 1200;
+
+    /* ---- 1.7 Motion ---- */
+    --duration-fast: 0.2s;
+    --duration-slow: 0.6s;
+    --ease-out: ease-out;
+    --ease-standard: ease-in-out;
+
+    /* ---- 1.8 Padrão do hero (SVG inline, sem requisição de rede) ---- */
+    --hero-pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect fill='%23222' width='100' height='100'/%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='%23333' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+
+/* ==========================================================================
+   2. DARK MODE
+   Estratégia: só tokens semânticos são remapeados. As seções "papel" viram
+   um marrom-escuro quente (levemente mais claro que as seções "tinta"), o que
+   preserva o ritmo de alternância claro/escuro do design original.
+   Cores de texto/acento foram escolhidas para manter ≥ 4.5:1.
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --surface-ink: #121110;
+        --surface-ink-raised: #1d1a17;
+        --surface-paper: #1f1b18;
+        --surface-paper-raised: #2a2520;
+        --surface-footer: #0b0a09;
+        --surface-header: rgba(18, 17, 16, 0.92);
+        --surface-header-solid: rgba(18, 17, 16, 0.98);
+
+        --text-on-paper: var(--color-cream-100);
+        --text-on-paper-muted: var(--color-stone-300);
+        --accent-on-paper: var(--color-terracotta-300);   /* ≈ 5.2:1 sobre #2a2520 */
+        --border-on-paper: rgba(255, 255, 255, 0.08);
+        --focus-on-paper: var(--color-gold-500);
+
+        --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.45);
+    }
+}
+
+
+/* ==========================================================================
+   3. RESET & BASE
+   ========================================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    /* 100% (e não 16px) respeita a fonte-base escolhida pelo usuário — WCAG 1.4.4. */
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Âncoras (#secao) não ficam escondidas atrás do header fixo. */
+    scroll-padding-top: calc(var(--header-h) + var(--space-sm));
+}
+
+/* Smooth scroll só para quem NÃO pediu redução de movimento. */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: var(--fs-base);
+    line-height: var(--lh-base);
+    color: var(--text-on-paper);
+    background-color: var(--surface-paper);
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    line-height: var(--lh-tight);
+    text-wrap: balance;                 /* progressive enhancement */
+}
+
+p {
+    text-wrap: pretty;                  /* progressive enhancement */
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+}
+
+/* Foco visível e consistente (WCAG 2.4.7). A cor do anel muda por seção
+   (--focus-ring) para manter contraste ≥ 3:1 contra o fundo local. */
+:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   4. LAYOUT
+   ========================================================================== */
+
+/* ---- container ---- */
+.container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+}
+
+/* ---- section (bloco-base de todas as seções) ----
+   Os modificadores --ink / --paper só definem variáveis locais; os elementos
+   internos (__title, __subtitle, card, callout…) consomem essas variáveis.
+   Resultado: um componente funciona em qualquer seção sem regra extra. */
+.section {
+    padding-block: var(--space-xl);
+    background-color: var(--section-bg);
+    color: var(--section-fg);
+}
+
+.section--ink {
+    --section-bg: var(--surface-ink);
+    --section-fg: var(--text-on-ink);
+    --section-muted: var(--text-on-ink-muted);
+    --section-title: var(--accent-on-ink);
+    --section-raised: var(--surface-ink-raised);
+    --section-border: var(--border-on-ink);
+    --focus-ring: var(--focus-on-ink);
+}
+
+.section--paper {
+    --section-bg: var(--surface-paper);
+    --section-fg: var(--text-on-paper);
+    --section-muted: var(--text-on-paper-muted);
+    --section-title: var(--accent-on-paper);
+    --section-raised: var(--surface-paper-raised);
+    --section-border: var(--border-on-paper);
+    --focus-ring: var(--focus-on-paper);
+}
+
+.section__title {
+    font-size: var(--fs-2xl);
+    margin-bottom: var(--space-sm);
+    color: var(--section-title);
+}
+
+.section__subtitle {
+    font-size: var(--fs-lg);
+    font-style: italic;
+    margin-bottom: var(--space-md);
+    color: var(--section-muted);
+}
+
+.section__intro {
+    max-width: var(--measure-narrow);
+    margin: 0 auto var(--space-lg);
+    color: var(--section-muted);
+}
+
+/* ---- editorial (texto principal + coluna lateral) ----
+   Flexbox com flex-basis: quebra de linha acontece sozinha quando falta
+   espaço — sem media query. Proporção ≈ 3:1 no desktop. */
+.editorial {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    align-items: flex-start;
+}
+
+.editorial__text {
+    flex: 3 1 28rem;
+    min-width: 0;
+}
+
+.editorial__text p {
+    max-width: var(--measure);
+    font-size: var(--fs-md);
+    margin-bottom: 1.5rem;
+}
+
+.editorial__aside {
+    flex: 1 1 14rem;
+    min-width: 0;
+    border-top: 3px solid var(--accent-decor);
+    padding-top: var(--space-sm);
+}
+
+.editorial__aside-title {
+    font-size: 1.2rem;
+    margin-bottom: var(--space-sm);
+    color: var(--section-title);
+}
+
+/* ---- key-dates (lista de marcos) ---- */
+.key-dates__item {
+    font-size: var(--fs-sm);
+    margin-bottom: 0.8rem;
+    padding-bottom: var(--space-2xs);
+    border-bottom: 1px solid var(--section-border);
+}
+
+.key-dates__item strong {
+    color: var(--section-title);
+}
+
+/* ---- split (imagem + texto) ----
+   Flex-wrap em vez de grid de 2 colunas + media query:
+   - largo: duas colunas lado a lado;
+   - estreito: empilha sozinho, na ordem do DOM (mídia primeiro);
+   - --reverse usa row-reverse: no desktop a mídia vai para a direita, e ao
+     empilhar a mídia continua ACIMA do texto (o original precisava de
+     media query + `order` para obter isso). */
+.split {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+    align-items: center;
+}
+
+.split--reverse {
+    flex-direction: row-reverse;
+}
+
+.split__media,
+.split__body {
+    flex: 1 1 22rem;
+    min-width: 0;                       /* evita overflow de conteúdo longo em flex */
+}
+
+.split__body p {
+    font-size: var(--fs-base);
+    margin-bottom: 1.2rem;
+}
+
+/* ---- columns (texto em colunas) ----
+   `columns: 2 22rem` = no máximo 2 colunas, cada uma com ≥ 22rem; no mobile
+   cai para 1 coluna automaticamente. */
+.columns {
+    columns: 2 22rem;
+    column-gap: var(--space-lg);
+    font-size: var(--fs-base);
+}
+
+.columns p {
+    margin-bottom: 1.2rem;
+}
+
+/* ---- card-grid ----
+   auto-fit + minmax(min(100%, X), 1fr): colunas fluidas que nunca excedem
+   a largura do contêiner (o min(100%, …) protege telas < X). */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));            /* fallback */
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--card-min, 15rem)), 1fr));
+    gap: var(--card-gap, 1.5rem);
+}
+
+.card-grid--gallery {
+    --card-min: 18.75rem;
+    --card-gap: 2rem;
+}
+
+.card-grid--synthesis {
+    --card-min: 15.625rem;
+    --card-gap: 1.5rem;
+    margin-bottom: var(--space-lg);
+}
+
+
+/* ==========================================================================
+   5. COMPONENTES
+   ========================================================================== */
+
+/* ---- skip-link (WCAG 2.4.1) ----
+   Escondido FORA da tela com transform (não display:none, que o tiraria
+   da ordem de tabulação). Aparece ao receber foco. */
+.skip-link {
+    position: fixed;
+    top: var(--space-2xs);
+    left: var(--space-2xs);
+    z-index: var(--z-skip);
+    padding: var(--space-xs) var(--space-sm);
+    background-color: var(--color-cream-100);
+    color: var(--color-charcoal-900);
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    transform: translateY(-200%);
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+    outline: 3px solid var(--color-terracotta-700);
+    outline-offset: 2px;
+}
+
+/* ---- progress (barra de leitura) ----
+   Anima transform: scaleX (compositor/GPU) em vez de `width` (que dispararia
+   layout a cada frame de scroll). */
+.progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: var(--z-progress);
+    pointer-events: none;
+}
+
+.progress__bar {
+    height: 100%;
+    background-color: var(--accent-action);
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;             /* um único elemento: custo de memória irrelevante */
+}
+
+/* ---- site-header ----
+   O "estado rolado" não altera padding (isso causaria layout/reflow).
+   Em vez disso, uma sombra em ::after faz fade via opacity. */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: var(--z-header);
+    background-color: var(--surface-header);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    color: var(--text-on-ink);
+    --focus-ring: var(--focus-on-ink);
+}
+
+.site-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    box-shadow: var(--shadow-header);
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-standard);
+}
+
+.site-header--scrolled::after {
+    opacity: 1;
+}
+
+.site-header__inner {
+    display: flex;
+    flex-wrap: wrap;                    /* sem JS: o menu quebra para a 2ª linha */
+    align-items: center;
+    justify-content: space-between;
+    min-height: var(--header-h);
+}
+
+.site-header__logo {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: var(--lh-tight);
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;          /* CSS, não markup: leitores de tela não soletram "R-E-S-I-S…" */
+    color: var(--accent-on-ink);
+}
+
+/* ---- nav-toggle (botão hambúrguer) ----
+   Três barras animadas só com transform/opacity. O "X" é controlado por
+   [aria-expanded], a MESMA fonte de verdade usada pelos leitores de tela —
+   o estado visual nunca fica dessincronizado do estado acessível. */
+.nav-toggle {
+    display: none;                      /* só aparece com JS (ver .js abaixo) */
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;                 /* alvo de toque ≥ 44px (WCAG 2.5.5) */
+    min-height: 2.75rem;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+.nav-toggle__box {
+    position: relative;
+    display: block;
+    width: 1.5625rem;
+    height: 18px;
+}
+
+.nav-toggle__bar {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--text-on-ink);
+    transition: transform var(--duration-fast) var(--ease-standard),
+                opacity var(--duration-fast) var(--ease-standard);
+}
+
+.nav-toggle__bar:nth-child(1) { top: 0; }
+.nav-toggle__bar:nth-child(2) { top: 8px; }
+.nav-toggle__bar:nth-child(3) { top: 16px; }
+
+.nav-toggle[aria-expanded='true'] .nav-toggle__bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.nav-toggle[aria-expanded='true'] .nav-toggle__bar:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded='true'] .nav-toggle__bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+/* ---- nav (mobile-first) ---- */
+.nav {
+    flex: 1 1 100%;
+}
+
+.nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) 1.25rem;
+    padding-bottom: var(--space-xs);
+}
+
+.nav__link {
+    display: block;
+    padding: var(--space-2xs) var(--space-xs);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+}
+
+.nav__link:hover {
+    color: var(--accent-on-ink);
+}
+
+/* Seção atual (scroll spy). Sublinhado + cor: a informação não depende só
+   da cor (WCAG 1.4.1). */
+.nav__link[aria-current='location'] {
+    color: var(--accent-on-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.35em;
+}
+
+/* Com JS: o menu vira painel retrátil.
+   visibility:hidden remove os links da ordem de tabulação e da árvore de
+   acessibilidade quando fechado (sem precisar de aria-hidden em elemento
+   focável — o que seria um erro de ARIA). */
+.js .nav-toggle {
+    display: inline-flex;
+}
+
+.js .nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex: none;
+    background-color: var(--surface-header-solid);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    transition: opacity var(--duration-fast) var(--ease-standard),
+                transform var(--duration-fast) var(--ease-standard),
+                visibility 0s linear var(--duration-fast);
+}
+
+.js .nav--open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0s;
+}
+
+.js .nav__list {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0;
+    padding: var(--space-sm) 0;
+    text-align: center;
+}
+
+/* Desktop: 8 links + logo só cabem em linha a partir de ~1024px
+   (o original quebrava em 768px e apertava os itens). */
+@media (min-width: 64em) {
+    .nav,
+    .js .nav {
+        position: static;
+        flex: 0 1 auto;
+        background: none;
+        visibility: visible;
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .nav__list,
+    .js .nav__list {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 0;
+    }
+
+    .nav__link {
+        padding: var(--space-3xs) 0;
+    }
+
+    .nav-toggle,
+    .js .nav-toggle {
+        display: none;
+    }
+}
+
+/* ---- btn ---- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.8rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: var(--fs-base);
+    font-weight: 500;
+    border: 1px solid transparent;
+    cursor: pointer;
+    /* Só transform é animado; a troca de cor no hover é instantânea
+       (cor/background não são propriedades de compositor). */
+    transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn--primary {
+    background-color: var(--accent-action);
+    color: var(--color-cream-100);
+}
+
+.btn--primary:hover,
+.btn--primary:focus-visible {
+    background-color: var(--accent-action-hover);
+}
+
+.btn--secondary {
+    background-color: transparent;
+    border-color: var(--color-cream-100);
+    color: var(--color-cream-100);
+}
+
+.btn--secondary:hover,
+.btn--secondary:focus-visible {
+    background-color: rgba(244, 239, 230, 0.1);
+}
+
+/* ---- hero ---- */
+.hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100svh;                 /* svh: não "pula" com a barra de endereço do mobile */
+    padding-top: calc(var(--header-h) + var(--space-md));
+    padding-bottom: 5rem;               /* reserva espaço para o indicador de rolagem */
+    background: linear-gradient(to right, rgba(23, 23, 23, 0.9), rgba(23, 23, 23, 0.6)),
+                var(--hero-pattern) center / cover;
+    background-color: var(--surface-ink);
+    color: var(--text-on-ink);
+    --focus-ring: var(--focus-on-ink);
+}
+
+.hero__content {
+    max-width: 50rem;
+    /* Entrada única e deliberada: fade (opacity) via CSS — funciona sem JS. */
+    animation: fade-in 1s ease-in both;
+}
+
+.hero__period {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-weight: 600;
+    letter-spacing: var(--ls-wider);
+    color: var(--accent-on-ink);
+}
+
+.hero__title {
+    margin-bottom: var(--space-sm);
+    font-size: var(--fs-hero);
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+}
+
+.hero__subtitle {
+    margin-bottom: 1.5rem;
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-weight: 400;
+    line-height: var(--lh-tight);
+    color: var(--text-on-ink-soft);
+}
+
+.hero__text {
+    max-width: 37.5rem;
+    margin-bottom: var(--space-md);
+    font-size: var(--fs-md);
+    color: var(--text-on-ink-muted);
+}
+
+.hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+}
+
+/* Centralizado com margem negativa (e não com translateX(-50%)) para que a
+   animação possa usar só translateY sem brigar com o transform de posição. */
+.hero__scroll {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    width: 3rem;
+    margin-left: -1.5rem;
+    font-size: 2rem;
+    line-height: 1;
+    text-align: center;
+    color: var(--accent-on-ink);
+    animation: hero-bounce 2s infinite;
+}
+
+/* ---- media (figure + img + figcaption) ----
+   width/height no <img> reservam o espaço antes do carregamento → CLS ≈ 0. */
+.media__img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid var(--section-border);
+}
+
+.media__caption {
+    margin-top: var(--space-2xs);
+    font-size: var(--fs-xs);
+    font-style: italic;
+    color: var(--section-muted);
+}
+
+/* ---- callout ---- */
+.callout {
+    margin: var(--space-md) 0;
+    padding: 1.5rem;
+    background-color: var(--surface-ink-raised);
+    border-left: 4px solid var(--accent-decor);
+    color: var(--text-on-ink);
+}
+
+.callout__title {
+    margin-bottom: var(--space-2xs);
+    font-size: var(--fs-base);
+    color: var(--accent-on-ink);
+}
+
+.callout p:last-child {
+    margin-bottom: 0;
+}
+
+/* ---- timeline ----
+   Mobile-first: linha à esquerda e cartões empilhados.
+   ≥ 48em: linha central com cartões alternados (nth-child). */
+.timeline {
+    --line-x: 1.25rem;
+    position: relative;
+    max-width: 50rem;
+    margin: 3rem auto 0;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--line-x);
+    width: 2px;
+    background-color: var(--color-gold-500);
+    transform: translateX(-50%);
+}
+
+.timeline__item {
+    position: relative;
+    padding: 0.625rem 0 0.625rem 3.25rem;
+    margin-bottom: 2rem;
+}
+
+.timeline__dot {
+    position: absolute;
+    top: 1.15rem;
+    left: var(--line-x);
+    z-index: var(--z-raised);
+    width: 20px;
+    height: 20px;
+    background-color: var(--accent-decor);
+    border: 4px solid var(--surface-paper);
+    border-radius: var(--radius-full);
+    transform: translateX(-50%);
+}
+
+.timeline__card {
+    padding: 1.5rem;
+    background-color: var(--surface-paper-raised);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-card);
+}
+
+.timeline__date {
+    margin-bottom: var(--space-2xs);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent-on-paper);
+}
+
+.timeline__title {
+    margin-bottom: var(--space-2xs);
+    font-size: 1.1rem;
+}
+
+@media (min-width: 48em) {
+    .timeline::before {
+        left: 50%;
+    }
+
+    .timeline__item {
+        width: 50%;
+        padding: 0.625rem 2.5rem;
+    }
+
+    .timeline__item:nth-child(odd) {
+        padding-left: 0;
+    }
+
+    .timeline__item:nth-child(even) {
+        margin-left: 50%;
+        padding-right: 0;
+    }
+
+    .timeline__item:nth-child(odd) .timeline__dot {
+        left: auto;
+        right: 0;
+        transform: translateX(50%);
+    }
+
+    .timeline__item:nth-child(even) .timeline__dot {
+        left: 0;
+    }
+}
+
+/* ---- poem (citação) ---- */
+.poem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.poem__verse {
+    margin-bottom: 1.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 1rem + 1vw, 1.8rem);
+    font-style: italic;
+    line-height: var(--lh-loose);
+    color: var(--accent-on-ink);
+}
+
+.poem__cite {
+    font-size: var(--fs-sm);
+    color: var(--section-muted);
+}
+
+/* ---- card ----
+   Um único bloco, duas variações de tema via modificador. */
+.card {
+    background-color: var(--card-bg);
+    color: var(--card-fg);
+    border-top: var(--card-border-top);
+    overflow: hidden;
+}
+
+.card--ink {
+    --card-bg: var(--surface-ink-raised);
+    --card-fg: var(--text-on-ink-soft);
+    --card-title: var(--accent-on-ink);
+    --card-border-top: 4px solid var(--accent-decor);
+}
+
+.card--paper {
+    --card-bg: var(--surface-paper-raised);
+    --card-fg: var(--text-on-paper);
+    --card-title: var(--accent-on-paper);
+    --card-border-top: 3px solid var(--color-gold-500);
+    border: 1px solid var(--border-on-paper);
+    border-top: var(--card-border-top);
+}
+
+.card__body {
+    padding: 1.5rem;
+}
+
+.card__title {
+    margin-bottom: var(--space-2xs);
+    font-size: 1.2rem;
+    color: var(--card-title);
+}
+
+.card--ink .card__title {
+    margin-bottom: var(--space-sm);
+}
+
+.card__text {
+    font-size: var(--fs-sm);
+}
+
+/* synth: título menor, como no original */
+.card--paper .card__title {
+    font-size: 1.1rem;
+}
+
+.card--paper .card__text {
+    font-size: 0.9rem;
+}
+
+/* ---- conclusion ---- */
+.conclusion {
+    padding: var(--space-md);
+    text-align: center;
+    background-color: var(--surface-ink);
+    color: var(--text-on-ink);
+    border-radius: var(--radius-sm);
+}
+
+/* ---- references ---- */
+.references {
+    border-top: 1px solid var(--border-on-ink);
+}
+
+.references__item {
+    margin-bottom: var(--space-sm);
+    font-size: 0.9rem;
+    color: var(--section-muted);
+}
+
+.references__link {
+    margin-right: var(--space-2xs);
+    color: var(--accent-on-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+/* Hover em creme: o terracota original (#A84E36) sobre #171717 tem só ~3.3:1. */
+.references__link:hover {
+    color: var(--text-on-ink);
+}
+
+/* ---- site-footer ---- */
+.site-footer {
+    padding: var(--space-md) 0;
+    background-color: var(--surface-footer);
+    color: var(--text-on-ink-muted);
+    text-align: center;
+    font-size: var(--fs-xs);
+    --focus-ring: var(--focus-on-ink);
+}
+
+/* ---- back-to-top ----
+   Escondido com opacity + visibility (sai da ordem de tabulação) e
+   revelado por transform/opacity. Sem JS ele nunca aparece — correto,
+   pois sem JS o botão não faria nada. */
+.back-to-top {
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1.25rem, env(safe-area-inset-bottom));
+    z-index: var(--z-fab);
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-cream-100);
+    background-color: var(--accent-action);
+    border: 0;
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-fab);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.5rem);
+    transition: opacity var(--duration-fast) var(--ease-standard),
+                transform var(--duration-fast) var(--ease-standard),
+                visibility 0s linear var(--duration-fast);
+}
+
+.back-to-top--visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition-delay: 0s;
+}
+
+.back-to-top:hover {
+    background-color: var(--accent-action-hover);
+}
+
+/* Anel de foco em dois tons: legível sobre seções claras E escuras
+   (o botão flutua sobre ambas). */
+.back-to-top:focus-visible {
+    outline: 3px solid var(--color-cream-100);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px var(--color-charcoal-900), var(--shadow-fab);
+}
+
+
+/* ==========================================================================
+   6. UTILITÁRIOS
+   ========================================================================== */
+.u-text-center {
+    text-align: center;
+}
+
+/* Visualmente oculto, porém lido por tecnologias assistivas. */
+.u-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+/* ==========================================================================
+   7. FALLBACKS (degradação graciosa)
+   ========================================================================== */
+
+/* Sem backdrop-filter: aumenta a opacidade do header para manter legibilidade. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .site-header {
+        background-color: var(--surface-header-solid);
+    }
+}
+
+/* Sem JS: o header deixa de ser fixo (o menu quebra em várias linhas e
+   cobriria o conteúdo) e o hero ganha respiro extra. */
+html:not(.js) .site-header {
+    position: absolute;
+}
+
+html:not(.js) .hero {
+    padding-top: calc(var(--header-h) + 6rem);
+}
+
+
+/* ==========================================================================
+   8. MOTION
+   Regra do projeto: animar SOMENTE transform e opacity (compositor/GPU,
+   sem layout nem paint por frame).
+   ========================================================================== */
+@keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes hero-bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+/* ---- reveal (animação de entrada no scroll) ----
+   PROGRESSIVE ENHANCEMENT: o estado "escondido" só existe sob `.js`
+   (classe aplicada por um script inline no <head>). Sem JS — ou se o script
+   falhar — todo o conteúdo permanece visível. O original escondia tudo com
+   opacity:0 incondicionalmente: sem JS, a página ficava em branco.
+   O estado "visível" é o estado natural (sem regra própria), o que evita
+   brigas de especificidade. */
+.reveal {
+    transition: opacity var(--duration-slow) var(--ease-out),
+                transform var(--duration-slow) var(--ease-out);
+}
+
+.js .reveal:not(.reveal--visible) {
+    opacity: 0;
+    transform: translateY(1.25rem);
+}
+
+.reveal--delay-1 { transition-delay: 0.2s; }
+.reveal--delay-2 { transition-delay: 0.4s; }
+
+/* ---- prefers-reduced-motion (WCAG 2.3.3) ----
+   Neutraliza animações e transições para quem tem sensibilidade a movimento.
+   0.01ms (e não 0) preserva eventos animationend/transitionend. */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        transition-delay: 0s !important;
+        scroll-behavior: auto !important;
+    }
+
+    .js .reveal:not(.reveal--visible) {
+        opacity: 1;
+        transform: none;
+    }
+
+    .hero__scroll {
+        animation: none;
+    }
+}
+
+/* ---- Ajuste de imagens no dark mode ---- */
+@media (prefers-color-scheme: dark) {
+    .media__img {
+        filter: brightness(0.9);
+    }
+}
